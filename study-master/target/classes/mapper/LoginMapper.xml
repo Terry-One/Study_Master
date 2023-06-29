@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ddb.mapper.LoginMapper">
+
+	<resultMap type="com.ddb.entity.User" id="UserMap">
+	
+	</resultMap>
+	
+	<!-- 登录用户 -->
+	<select id="loginUser" parameterType="com.ddb.entity.User" resultMap="UserMap">
+		select name,passwd
+		from user_info
+		where name=#{name} and passwd=#{passwd}
+	</select>
+	
+	<!-- 注册用户 -->
+	<insert id="insertUser" parameterType="com.ddb.entity.User">
+		insert into user_info(name,passwd,nick_name,sex,age,phone,email) 
+		values(#{name}, #{passwd}, #{nick_name}, #{sex}, #{age}, #{phone}, #{email})
+	</insert>
+	
+	<!-- 注册用户时，验证用户名是否已存在 -->
+	<select id="checkName" resultMap="UserMap" parameterType="java.lang.String">
+		select user_id,name,passwd,is_admin
+		from user_info
+		where name=#{name}
+	</select>
+	
+	<!-- 修改用户信息 -->
+	<update id="updateUser" parameterType="com.ddb.entity.User">
+		update user_info set
+		nick_name=#{nick_name},sex=#{sex},age=#{age},
+		phone=#{phone},email=#{email}
+		where name=#{name}
+	</update>
+	
+	<!-- 用户信息 -->
+	<select id="getUser" parameterType="com.ddb.entity.User" resultMap="UserMap">
+		select name,nick_name,sex,age,phone,email,is_admin
+		from user_info
+		where name=#{name}
+	</select>
+	
+	
+	<!-- 获取所有用户信息 -->
+	<select id="getAllUser" resultMap="UserMap">
+		select name,nick_name,sex,age,phone,email,is_admin
+		from user_info
+	</select>
+	
+	<!-- 修改用户信息 -->
+	<update id="updatePermission" parameterType="com.ddb.entity.User">
+		update user_info set
+		nick_name=#{nick_name},sex=#{sex},age=#{age},
+		phone=#{phone},email=#{email},is_admin=#{is_admin}
+		where name=#{name}
+	</update>
+	
+</mapper> 

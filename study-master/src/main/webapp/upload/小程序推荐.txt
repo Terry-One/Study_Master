@@ -1,0 +1,280 @@
+BEAKER	beaker
+译学馆
+不做手机控
+纸条
+小日常
+com.bigdata.logAnalysis.LogMR
+export JAVA_HOME=/home/e3base/software/java
+export ZOO_HOME=/home/e3base/software/zookeeper
+export MYSQL_HOME=/usr/local/mysql
+export HADOOP_HOME=/home/e3base/software/hadoop
+export HBASE_HOME=/home/e3base/software/hbase
+
+
+$HBASE_HOME/bin:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$ZOO_HOME/bin:$MYSQL_HOME/bin:
+
+export JAVA_HOME=/home/e3base/software/java
+export ZOO_HOME=/home/e3base/software/zookeeper
+export HADOOP_HOME=/home/e3base/software/hadoop
+export HBASE_HOME=/home/e3base/software/hbase
+
+
+$HBASE_HOME/bin:$JAVA_HOME/bin:$ZOO_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
+
+
+
+
+（1）修改用户名；命令：usermod -l newuser olduser
+注：需要停掉旧用户的所有进程
+命令：pkill -9 -u olduser
+（2）修改家目录；命令：usermod -d /home/newuser -m newuser
+（3）修改组名；命令：groupmod -n newuser olduser
+（4）修改UID；命令：usermod -u 1000 newuser
+（5）检查；命令：id newuser
+
+
+（1）解压hadoop压缩包
+（2）创建软链接hadoop -> hadoop-2.6...
+（3）配置hadoop-env.sh文件
+（4）配置core-site.xml文件
+（5）配置slaves文件
+（6）配置topology.data文件
+
+
+
+（1）初始化zkfc；命令：hdfs zkfc -formatZK
+（2）启动journal node进程；命令：hadoop-daemon.sh start journalnode
+（3）初始化主namenode节点；命令：hdfs namenode -format
+（4）初始化备namenode节点
+先启动主节点；命令：hadoop-daemon.sh start namenode
+在另外备namenode节点拷贝主namenode节点的元数据，保证两个节点数据一致：hdfs namenode -bootstrapStandby
+（5）单节点启动zkfc；命令：hadoop-daemon.sh start zkfc
+（6）启动从节点的datanode；命令：hadoop-daemon.sh start datanode
+
+	
+1.按老师要求，进行第二主节点的配置
+2.在hdfs上进行简单应用
+3.对hbase进行简单应用
+
+
+
+1.初始化namenode时，出现主节点和备用主节点不通的问题
+2.无法启动DataNode
+3.DataNode无法挂载在NameNode上
+
+
+
+ hive>show databases;
+查看tables，初次操作时，只返回OK和操作所用时间
+   hive> SHOW TABLES;
+创建库sensitive
+   hive>CREATE DATABASE sensitive;
+创建数据文件在/e3base目录下
+vi /e3base/events.csv
+10123,US,android,createNote
+10200,FR,windows,updateNote
+10123,US,android,updateNote
+10200,FR,ios,createNote
+1015,US,windows,updateTag
+创建表
+hive>create table sensitive.events5(
+number STRING, country STRING, client STRING, action STRING
+) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+向表events5导入数据
+   hive> LOAD DATA LOCAL INPATH '/e3base/events.csv' overwrite into table sensitive.events5;
+查看表events5的数据
+   hive> SELECT * FROM sensitive.events5;
+计算sensitive.events5中number的总和。
+hive> SELECT MAX(number) FROM sensitive.events5;
+
+
+
+create 't:teacher',{NAME=>'baseinfo',VERSIONS=>3},{NAME=>
+'extrainfo',VERSIONS=>5}
+
+
+在主节点上启动resourcemanager进程；命令：yarn-daemon.sh start resourcemanager
+
+在从节点上启动nodemanager进程；命令：yarn-daemon.sh start nodemanager
+
+yarn rmadmin -getServiceState rm1
+hadoop jar share/hadoop/mapreduce/
+hadoop-mapreduce-examples-2.6.0-cdh5.14.0.jar pi 2 10
+
+1.在mysql中创建hive的元数据库hivedb
+		启动mysql服务
+		创建hivedb数据库
+		授权hive用户以及密码登录访问权限
+		grant all on hivedb.* to hive@'%'  identified by 'hive';
+		grant all on hivedb.* to hive@'localhost'  identified by 'hive';
+		刷新 flush privileges；
+	2.启动Zookeeper服务，并确保其状态正常
+	3.启动hdfs，并确保各节点进程状态良好
+	4.启动yarn，确保nodemanager都在线
+
+1.scp命令，上传压缩包至主机
+	2.解压hive压缩包，并创建软链接
+	3.在~/.base_profile文件中进行hive的环境变量的配置
+	4.修改hive-env.sh文件
+5.修改hive-site.xml文件
+	6.修改hive-log4j.properties文件
+
+
+（1）创建库person；命令：create database person；
+（2）创建表student；命令：create table sensitive.events5(
+stuno STRING, name STRING, sex STRING, age STRING
+) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+（3）在/home/e3base/software目录下创建数据文件
+（4）向student表中导入数据
+命令：LOAD DATA LOCAL INPATH '/home/e3base/software/ student.txt' overwrite into table person.student;
+（5）查看导入的数据，命令：select * from person.student;
+
+
+
+今日工作内容
+
+1.对yarn的内存分配进行了重新设置，并进行简单的应用
+2.完成hive的安装和部署
+3.对hive进行简单的应用
+
+交付结果
+
+对yarn进行了简单应用，但因内存原因无法执行任务
+对hive进行了简单应用并输出了hive的操作文档
+
+完成情况
+
+完成
+
+问题和疑惑
+
+hive初始化失败，一次因为配置原因，一次因为无法连接mysql
+
+明日工作计划
+
+1.熟悉yarn的简单应用，并输出应用操作文档
+2.完成hive的安装和部署
+
+ Redis的优点
+性能极高 – Redis能支持超过 100K+ 每秒的读写频率。
+丰富的数据类型 – Redis支持二进制案例的 Strings, Lists, Hashes, Sets 及 Ordered Sets 数据类型操作。
+原子 – Redis的所有操作都是原子性的，同时Redis还支持对几个操作全并后的原子性执行。
+丰富的特性 – Redis还支持 publish/subscribe, 通知, key 过期等等特性。
+Redis的缺点
+是数据库容量受到物理内存的限制,不能用作海量数据的高性能读写,因此Redis适合的场景主要局限在较小数据量的高性能操作和运算上。
+总结： Redis受限于特定的场景，专注于特定的领域之下，速度相当之快，目前还未找到能替代使用产品。
+Redis有什么用？只有了解了它有哪些特性，我们在用的时候才能扬长避短，为我们所用： 
+1. 速度快：使用标准C写，所有数据都在内存中完成，读写速度分别达到10万/20万 
+2. 持久化：对数据的更新采用Copy-on-write技术，可以异步地保存到磁盘上，主要有两种策略，一是根据时间，更新次数的快照（save 300 10 ）二是基于语句追加方式(Append-only file，aof) 
+3. 自动操作：对不同数据类型的操作都是自动的，很安全 
+4. 快速的主--从复制，官方提供了一个数据，Slave在21秒即完成了对Amazon网站10G key set的复制。 
+5. Sharding技术： 很容易将数据分布到多个Redis实例中，数据库的扩展是个永恒的话题，在关系型数据库中，主要是以添加硬件、以分区为主要技术形式的纵向扩展解决了很多的应用场景，但随着web2.0、移动互联网、云计算等应用的兴起，这种扩展模式已经不太适合了，所以近年来，像采用主从配置、数据库复制形式的，Sharding这种技术把负载分布到多个特理节点上去的横向扩展方式用处越来越多。
+
+
+
+#主机序号  IP               用户       目录
+H01        192.168.47.133   dmdb       /data/dmdb
+H02        192.168.47.132   dmdb       /data/dmdb
+H03        192.168.47.131   dmdb       /data/dmdb
+
+RootServer H01 9256
+
+#名称  MDB大小  主库主机   主库端口    主库复制端口    备库主机     备库端口     备库复制端口
+db01   1024      H01        8890        9290           H02,H03      8891,8892    9291,9292
+db02   1024      H02        8890        9290           H03,H01      8891,8892    9291,9292
+db03   1024      H03        8890        9290           H01,H02      8891,8892    9291,9292
+
+
+问题一：
+部署hadoop运维脚本时出现一些脚本无法正常运行
+解决方案：
+（1）问题可能出现在脚本所需要读取的文件中的启动进程的主机名未修改成个人的
+（2）问题可能出现在运行脚本所使用的启动进程命令与个人所使用的命令不符，需要对其中的命令进行修改
+（3）在启动checkhadoop-main.sh脚本时会对一写组件日志信息进行抓取，所以需要对其中路径进行修改
+问题二：
+在第一台主机部署keepalived后，在第二台部署后，出现无法虚拟ip无法生成的情况
+解决方案：
+导致错误的原因：第二台配置文件时复制第一台的，所以未对虚拟路由id进行修改导致id冲突，无法生成虚拟ip
+解决方法：只需修改任意一台主机的virtual_route_id即可，取值在0~255区间任选
+；并且我们在进行高可用测试的时候，若想设置某台主机优先访问，需要将该主机的权重值设置成高于其它主机的值。
+问题三：
+
+
+您好，我想问下，我的产品线是在杭州，但是我已经和HR请假了，想直接回南昌；请问这其中的差价需要补多少？
+
+集群健康状态
+正常slots个数
+异常slots个数
+redis版本
+运营天数
+连接个数
+数据总量
+拒绝的连接个数
+被阻塞连接个数
+连接数上限
+节点内存上限
+CPU使用率
+内存使用率
+磁盘使用率
+
+
+
+
+Select st.stuid, st.stunm, 
+    MAX(CASE c.coursenm WHEN '大学语文' THEN s.scores ELSE 0 END ) '大学语文',
+    MAX(CASE c.coursenm WHEN '新视野英语' THEN ifnull(s.scores,0) ELSE 0 END ) '新视野英语', 
+    MAX(CASE c.coursenm WHEN '离散数学' THEN ifnull(s.scores,0) ELSE 0 END ) '离散数学',
+    MAX(CASE c.coursenm WHEN '概率论与数理统计' THEN ifnull(s.scores,0) ELSE 0 END ) '概率论与数理统计',
+    MAX(CASE c.coursenm WHEN '线性代数' THEN ifnull(s.scores,0) ELSE 0 END ) '线性代数',
+    MAX(CASE c.coursenm WHEN '高等数学(一)' THEN ifnull(s.scores,0) ELSE 0 END ) '高等数学(一)',
+    MAX(CASE c.coursenm WHEN '高等数学(二)' THEN ifnull(s.scores,0) ELSE 0 END ) '高等数学(二)'
+From Student  st
+Left Join score s On st.stuid = s.stuid
+Left Join courses c On c.courseno = s.courseno
+Group by st.stuid
+
+
+@niuxl @shenxm 
+cc: @hanlu @zhangqi_odt @wangjy
+
+
+
+http://172.18.238.62:9001/svn/ac_shanxi/E3base/08 新达人乐园/学习笔记/段道博/【1+N】环境采集脚本
+
+
+（1）获取yarn中处于运行状态的是所有任务信息
+（2）筛选出任务类型为spark和flink类型的任务
+（3）获取任务的资源使用情况
+（4）根据应用的资源使用情况进一步获取cpu和内存的使用情况
+（5）根据应用的资源使用情况获取数据每秒处理的大小
+（6）将每一个应用的cpu以及内存的使用情况汇总，即可得到yarn中spark和flink实际消耗的cpu以及内存资源
+（7）将每一个应用的数据处理值汇总再除以任务总数，即可得到数据处理性能平均值
+
+
+1.工具介绍
+在项目开发过程中，我们经常需要一些benchmark工具来对系统进行压测，以获得系统的性能参数，极限吞吐等等指标。而在HBase中，就自带了一个benchmark工具—PerformanceEvaluation，可以非常方便地对HBase的Put、Get、Scan等API进行性能测试，并提供了非常丰富的参数来模拟各种场景。
+2.主要的参数介绍
+Nomapred：采用MapReduce的方式启动多线程测试还是通过多线程的方式，如果没有安装MapReduce，或者不想用MapReduce，通常我们采用多线程的方式，因此一般在命令中加上--nomapred来表示不使用MapReduce
+ Rows： 每个客户端(线程)运行的行。默认值：一百万。注意这里的行数是指单线程的行数，如果rows=100， 线程数为10，那么在写测试中，写入HBase的将是 100 x 10 行
+Table：测试表的名字，如果不设，默认为TestTable。
+oneCon：多线程运行测试时，底层使用一个还是多个链接。这个参数默认值为false，每个thread都会启一个Connection，建议把这个参数设为True
+Presplit：表的预分裂region个数，在做性能测试时一定要设置region个数，不然所有的读写会落在一个region上，严重影响性能
+3.主要命令介绍
+filterScan：使用过滤器运行扫描测试，根据它的值查找特定行（确保使用--rows = 20） 
+ randomRead：运行随机读取测试
+ randomSeekScan：运行随机搜索和扫描100测试
+ randomWrite：运行随机写测试
+ Scan：运行扫描测试（每行读取）
+ scanRange10：使用开始和停止行（最多10行）运行随机搜索扫描
+ scanRange100：使用开始和停止行运行随机搜索扫描（最多100行）
+ scanRange1000：使用开始和停止行（最多1000行）运行随机搜索扫描
+ scanRange10000：使用开始和停止行运行随机搜索扫描（最多10000行）
+ sequentialRead：运行顺序读取测试
+ sequentialWrite：运行顺序写入测试
+4.测试hbase的随机读性能
+测试命令：hbase org.apache.hadoop.hbase.PerformanceEvaluation --nomapred --rows=10000 randomRead 10
+说明：不采用mapreduce方式，随机读取10万行数据进行测试
+输出的部分信息：
+
+1.对昨日吞吐量大小代码进行修改
+2.对实时查询能力下的查询平均响应时间采集进行实现

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.ddb.mapper.DocMapper">
+
+	<resultMap type="com.ddb.entity.Doc" id="DocMap">
+	
+	</resultMap>
+	
+	<!-- 展示所有doc文件-->
+	<select id="getAllDoc" resultMap="DocMap" parameterType="java.lang.String">
+		select doc_id,doc_name,upload_time,update_time
+		from doc_info
+		where doc_name like #{doc_name}
+	</select>
+	
+	<!-- 上传文件doc信息 -->
+	<insert id="insertDoc" parameterType="com.ddb.entity.Doc">
+		insert into doc_info(doc_name,user_id,dir_path) 
+		values(#{doc_name}, #{user_id}, #{dir_path})
+	</insert>
+	
+</mapper> 
